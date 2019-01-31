@@ -1,0 +1,17 @@
+setMousePos(2137,790)
+
+local healthAddress = '[[["Tap Dungeon.exe"+002F0DD8]+D8]+4]+760'
+local health = readDouble(healthAddress)
+local stop = 0
+
+while stop == 0 do
+  health = readDouble(healthAddress)
+
+  mouse_event(MOUSEEVENTF_LEFTDOWN)
+  sleep(10)
+  mouse_event(MOUSEEVENTF_LEFTUP)
+  if isKeyPressed(VK_ESCAPE) then
+    stop = 1
+    break
+  end
+end
