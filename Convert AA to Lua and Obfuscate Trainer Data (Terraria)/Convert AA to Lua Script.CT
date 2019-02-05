@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="27">
+  <Forms>
+    <CETrainer Class="TTrainerForm" Encoding="Ascii85">ZIMAv!!Qs/9UI}%jk-kYjuRm01*!Kjt+F_F7,4{Voi-M!9XUqg1ichXPQe^ma0Jq%4FbCI^26[{]S!bm5RaqtfO8_H0uyPo[E?-6M-y0Dazfn@$W;.@7b092/jpyLlna{YD}B;sSgDo!V,vR/LD_.QZS;v_L_WN1mI.%9rNMBTjGx$Oc$b8^TaOwe^]6]!6;D%i39K{n-jDsd7fYLF*L#{4!bmaCfzA{mbqUn3j_!MRcVb:2=P_1F:p.1(idAcXK@_w{@@3JydHdp]PKqygL2-YZ6Tdbw?ok(Z4OPpl7[]?3(?j1{(((c0M)7Y](@,h_]o$p_@bbUDWO/l0[)Q6G5Pbs</CETrainer>
+  </Forms>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"No description"</Description>
+      <LastState Value="77" RealAddress="23BCCA04"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>23BCCA04</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"AA Script"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//aobscan(hSub,29 82 40 03 00 00 83)
+define(hSub,Terraria.Player::Hurt+DCF)
+alloc(newmem,$1000)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  //sub [edx+00000340],eax
+  jmp return
+
+hSub:
+  jmp newmem
+  nop
+return:
+registersymbol(hSub)
+
+[DISABLE]
+
+hSub:
+  db 29 82 40 03 00 00
+
+unregistersymbol(hSub)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: 5AC70E0F
+
+""+5AC70DE9: 0F B6 45 0C                    -  movzx eax,byte ptr [ebp+0C]
+""+5AC70DED: 50                             -  push eax
+""+5AC70DEE: 6A 00                          -  push 00
+""+5AC70DF0: F2 0F 10 45 E0                 -  movsd xmm0,[ebp-20]
+""+5AC70DF5: F2 0F 2C D0                    -  cvttsd2si edx,xmm0
+""+5AC70DF9: 8B CE                          -  mov ecx,esi
+""+5AC70DFB: E8 70 3B 49 BD                 -  call 18104970
+""+5AC70E00: F2 0F 10 45 E0                 -  movsd xmm0,[ebp-20]
+""+5AC70E05: F2 0F 2C C0                    -  cvttsd2si eax,xmm0
+""+5AC70E09: 8B 95 08 FE FF FF              -  mov edx,[ebp-000001F8]
+// ---------- INJECTING HERE ----------
+""+5AC70E0F: 29 82 40 03 00 00              -  sub [edx+00000340],eax
+// ---------- DONE INJECTING  ----------
+""+5AC70E15: 83 7D 08 FF                    -  cmp dword ptr [ebp+08],-01
+""+5AC70E19: 0F 85 95 00 00 00              -  jne 5AC70EB4
+""+5AC70E1F: 8B 85 08 FE FF FF              -  mov eax,[ebp-000001F8]
+""+5AC70E25: C6 80 51 05 00 00 01           -  mov byte ptr [eax+00000551],01
+""+5AC70E2C: DD 45 E0                       -  fld qword ptr [ebp-20]
+""+5AC70E2F: D9 E8                          -  fld1 
+""+5AC70E31: DF F1                          -  fcomip st(0),st(1)
+""+5AC70E33: DD D8                          -  fstp st(0)
+""+5AC70E35: 7A 30                          -  jp 5AC70E67
+""+5AC70E37: 75 2E                          -  jne 5AC70E67
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Lua AA Script"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{$lua}
+if syntaxcheck then return end
+
+[ENABLE]
+--aobscan(hSub,29 82 40 03 00 00 83)
+--define(hSub,Terraria.Player::Hurt+DCF)
+--registersymbol(hSub)
+
+--scan = AOBScan("29 82 40 03 00 00 83")[0]
+scan = "Terraria.Player::Hurt+DCF"
+registerSymbol("hSub",scan)
+
+--alloc(newmem,$1000)
+mem = allocateMemory(0x1000)
+registerSymbol("newmem",mem)
+
+script = [[
+  label(return)
+
+  newmem:
+    //sub [edx+00000340],eax
+    jmp return
+
+  hSub:
+    jmp newmem
+    nop
+  return:
+]]
+
+autoAssemble(script)
+
+[DISABLE]
+writeBytes(scan, 0x29, 0x82, 0x40, 0x03, 0x00, 0x00)
+--hSub:
+--  db 29 82 40 03 00 00
+unregisterSymbol("newmem")
+unregisterSymbol("hSub")
+--unregistersymbol(hSub)
+--dealloc(newmem)
+deAlloc(mem,0x1000)
+scan = nil
+mem = nil
+
+--[[
+{
+// ORIGINAL CODE - INJECTION POINT: 5AC70E0F
+
+""+5AC70DE9: 0F B6 45 0C                    -  movzx eax,byte ptr [ebp+0C]
+""+5AC70DED: 50                             -  push eax
+""+5AC70DEE: 6A 00                          -  push 00
+""+5AC70DF0: F2 0F 10 45 E0                 -  movsd xmm0,[ebp-20]
+""+5AC70DF5: F2 0F 2C D0                    -  cvttsd2si edx,xmm0
+""+5AC70DF9: 8B CE                          -  mov ecx,esi
+""+5AC70DFB: E8 70 3B 49 BD                 -  call 18104970
+""+5AC70E00: F2 0F 10 45 E0                 -  movsd xmm0,[ebp-20]
+""+5AC70E05: F2 0F 2C C0                    -  cvttsd2si eax,xmm0
+""+5AC70E09: 8B 95 08 FE FF FF              -  mov edx,[ebp-000001F8]
+// ---------- INJECTING HERE ----------
+""+5AC70E0F: 29 82 40 03 00 00              -  sub [edx+00000340],eax
+// ---------- DONE INJECTING  ----------
+""+5AC70E15: 83 7D 08 FF                    -  cmp dword ptr [ebp+08],-01
+""+5AC70E19: 0F 85 95 00 00 00              -  jne 5AC70EB4
+""+5AC70E1F: 8B 85 08 FE FF FF              -  mov eax,[ebp-000001F8]
+""+5AC70E25: C6 80 51 05 00 00 01           -  mov byte ptr [eax+00000551],01
+""+5AC70E2C: DD 45 E0                       -  fld qword ptr [ebp-20]
+""+5AC70E2F: D9 E8                          -  fld1 
+""+5AC70E31: DF F1                          -  fcomip st(0),st(1)
+""+5AC70E33: DD D8                          -  fstp st(0)
+""+5AC70E35: 7A 30                          -  jp 5AC70E67
+""+5AC70E37: 75 2E                          -  jne 5AC70E67
+}
+]]
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <LuaScript>function scriptEnabled()
+  scan = "Terraria.Player::Hurt+DCF"
+  registerSymbol("hSub",scan)
+
+  mem = allocateMemory(0x1000)
+  registerSymbol("newmem",mem)
+
+  script = [[
+    label(return)
+
+    newmem:
+      //sub [edx+00000340],eax
+      jmp return
+
+    hSub:
+      jmp newmem
+      nop
+    return:
+  ]]
+  autoAssemble(script)
+end
+
+function scriptDisabled()
+  writeBytes(scan, 0x29, 0x82, 0x40, 0x03, 0x00, 0x00)
+  unregisterSymbol("newmem")
+  unregisterSymbol("hSub")
+  deAlloc(mem,0x1000)
+  scan = nil
+  mem = nil
+end
+
+function CEButton1Click(sender)
+  scriptEnabled()
+  --decodeFunction("c-n1FO-sW-5S[)s8X}2lB3Lgu6sc5f!Jcy3L?6E:goqdMu!*04Hc8oRXmVSm[y[z$^xp,pK?Yye?Mhizb8:hq5RShF(d8xQwe9K:elb{y0.C}F-MX^i44W{,X$Jl]z$Y+mGfgb!gRcpUH4q!%!_0@Z^Z6-8u)5OiO9,{B$SG+pZMtZ$h/Qdw4:5#/3BR{)yhiDHH;Fh5;#HRlN[/TUg*+$uC;ON%7M2mEDW-JDg})(B?D9@l*)5a;o}Hc[+R7#n#4:f[!.RZO?Ce03qAF!{/}Z%i+u0Lr=rc[,k@6*%*pXwCaxs5CM[z5@[jKi(v/bI:cz-lgwmoF_s$)Y5,US6nD**.5)={qJ_L[CB[+kL")()
+end
+function CEButton2Click(sender)
+  scriptDisabled()
+  --decodeFunction("c-n1[(1%9x6ot;#8#[c:lt8g_)Tzy@7BgA6;Mr2kpP;el2;Btpn-uy4zEDD6tW)M0#slZ[oeTGJUO%f%gqO;sKlfR%5T]Y6daos6X5sA]#j[nFNUWqpV{Py(hzLp%nugF;FC:*;Dku#8nXW8+HX(ARhz3KO4GH.ctbdj.c)T8FT/3AA!+i)%[KMvm3qJZP!M6kHVCcZr/!P1W]YSF/ok!/%drbHt)^-v-[6__CWwF.PNsc;ay9,Ss=,Eww2cc0ctN")()
+end
+--TRAINERGENERATORSTART--
+--This is autogenerated code. Changing code in this block will
+--get erased and rewritten if you regenerate the trainer code
+
+--Uncomment the following line if this is a Cheat Table format trainer and you don't want CE to show (Tip, save as .CETRAINER alternatively)
+--hideAllCEWindows()
+
+RequiredCEVersion=6.81
+if (getCEVersion==nil) or (getCEVersion()&lt;RequiredCEVersion) then
+  messageDialog('Please install Cheat Engine '..RequiredCEVersion, mtError, mbOK)
+  closeCE()
+end
+
+getAutoAttachList().add("Terraria.exe")
+gPlaySoundOnAction=false
+CETrainer.show()
+function AboutClick()
+  showMessage(gAboutText)
+end
+gAboutText=[[This trainer was made by Cheat 
+Engine
+www.cheatengine.org]]
+
+function CloseClick()
+  --called by the close button onClick event, and when closing the form
+  closeCE()
+  return caFree --onClick doesn't care, but onClose would like a result
+end
+
+--TRAINERGENERATORSTOP--
+</LuaScript>
+</CheatTable>
