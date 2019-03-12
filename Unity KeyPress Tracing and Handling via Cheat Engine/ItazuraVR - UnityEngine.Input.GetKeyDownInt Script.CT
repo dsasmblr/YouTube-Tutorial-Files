@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="28">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"UnityEngine:Input:GetKeyDownInt+74"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>//-- RAX = isPressed (0 no, 1 yes)
+//-- RSI = keyCode (1B for Esc)
+//-- [rbp+48] = return address of caller Manager:VRInput:Update+143
+
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+LaunchMonoDataCollector()
+esc = allocateMemory(4)
+addr = getAddress("Manager:VRInput:Update+143")
+writeInteger(esc,addr)
+registerSymbol("esc",esc)
+{$asm}
+assert(UnityEngine:Input:GetKeyDownInt+74,48 8B 4D 98 4C 8B 5D A0)
+define(UnityEngineInputGetKeyDownInt,UnityEngine:Input:GetKeyDownInt+74)
+registersymbol(UnityEngineInputGetKeyDownInt)
+alloc(GetKeyDownIntMem,$1000,UnityEngineInputGetKeyDownInt)
+registersymbol(GetKeyDownIntMem)
+define(escapeKey,GetKeyDownIntMem+200)
+registersymbol(escapeKey)
+
+label(return)
+
+escapeKey:
+  readmem(esc,4)
+
+GetKeyDownIntMem:
+  pushf
+  cmp al,1
+  jne @f
+  cmp si,1B
+  jne @f
+  push rbx
+  mov ebx,dword ptr [escapeKey]
+  cmp [rbp+48],ebx
+  pop rbx
+  jne @f
+  xor rax,rax
+  @@:
+  popf
+  mov rcx,[rbp-68]
+  mov r11,[rbp-60]
+  jmp return
+
+UnityEngineInputGetKeyDownInt:
+  jmp GetKeyDownIntMem
+  nop
+  nop
+  nop
+return:
+
+[DISABLE]
+UnityEngineInputGetKeyDownInt:
+  db 48 8B 4D 98 4C 8B 5D A0
+
+unregistersymbol(escapeKey)
+unregistersymbol(GetKeyDownIntMem)
+unregistersymbol(UnityEngineInputGetKeyDownInt)
+unregistersymbol(esc)
+dealloc(esc)
+dealloc(GetKeyDownIntMem)
+
+{
+// ORIGINAL CODE - UnityEngineInputGetKeyDownIntION POINT: 17E06604
+
+""+17E065DB: 4C 89 18                       -  mov [rax],r11
+""+17E065DE: 48 B8 90 C0 2D 7B F6 7F 00 00  -  mov rax,ItazuraVR.exe+7EC090
+""+17E065E8: 48 8B CE                       -  mov rcx,rsi
+""+17E065EB: 48 83 EC 20                    -  sub rsp,20
+""+17E065EF: 48 89 65 C8                    -  mov [rbp-38],rsp
+""+17E065F3: 4C 8B D8                       -  mov r11,rax
+""+17E065F6: 48 33 C0                       -  xor rax,rax
+""+17E065F9: 41 FF D3                       -  call r11
+""+17E065FC: 48 83 C4 20                    -  add rsp,20
+""+17E06600: 48 0F B6 C0                    -  movzx rax,al
+// ---------- UnityEngineInputGetKeyDownIntING HERE ----------
+""+17E06604: 48 8B 4D 98                    -  mov rcx,[rbp-68]
+""+17E06608: 4C 8B 5D A0                    -  mov r11,[rbp-60]
+// ---------- DONE UnityEngineInputGetKeyDownIntING  ----------
+""+17E0660C: 49 89 0B                       -  mov [r11],rcx
+""+17E0660F: 48 8B 75 F8                    -  mov rsi,[rbp-08]
+""+17E06613: C9                             -  leave 
+""+17E06614: C3                             -  ret 
+""+17E06615: 00 00                          -  add [rax],al
+""+17E06617: 00 00                          -  add [rax],al
+""+17E06619: 00 00                          -  add [rax],al
+""+17E0661B: 00 85 00 00 00 94              -  add [rbp-6C000000],al
+""+17E06621: 00 00                          -  add [rax],al
+""+17E06623: 00 01                          -  add [rcx],al
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
